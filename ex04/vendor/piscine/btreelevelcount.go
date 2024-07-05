@@ -16,5 +16,5 @@ func BTreeLevelCount(root *TreeNode) int {
 	if root == nil {
 		return 0
 	}
-	return max(BTreeLevelCount(root.Left), BTreeLevelCount(root.Right)) + 1
+	return 1 + max(BTreeLevelCount(root.Left), BTreeLevelCount(root.Right))
 }
