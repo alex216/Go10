@@ -12,7 +12,17 @@ func main() {
 	BTreeInsertData(root, "1")
 	BTreeInsertData(root, "7")
 	BTreeInsertData(root, "5")
-	piscine.BTreeApplyPreorder(root, fmt.Println)
+	piscine.BTreeApplyPreorder(root, fmt.Print)
+	fmt.Println()
+
+	root2 := &piscine.TreeNode{Data: "4"}
+	BTreeInsertData(root2, "2")
+	BTreeInsertData(root2, "6")
+	BTreeInsertData(root2, "1")
+	BTreeInsertData(root2, "3")
+	BTreeInsertData(root2, "5")
+	BTreeInsertData(root2, "7")
+	piscine.BTreeApplyPreorder(root2, fmt.Print)
 }
 
 // helper
