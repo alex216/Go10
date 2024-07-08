@@ -88,6 +88,23 @@ func createBinaryTree(data []string) *TreeNode {
 	return root
 }
 
+func checkResultFunc(t *testing.T, root *TreeNode, data string, expected string) {
+	output := captureStdout(func() {
+		piscine.BTreeApplyInorder(root, fmt.Print)
+	})
+	// fmt.Printf("[%s]\n", output)
+	if output != expected {
+		t.Errorf("\n\ngot [%s] want [%s]\n\n", output, expected)
+	}
+	if piscine.BTreeSearchItem(root, data) != nil {
+		t.Errorf("not deleted")
+	}
+
+	if piscine.BTreeIsBinary(root) == false {
+		t.Errorf("tree is not binary")
+	}
+}
+
 func captureStdout(f func()) string {
 	old := os.Stdout
 	r, w, _ := os.Pipe()
@@ -102,21 +119,4 @@ func captureStdout(f func()) string {
 	io.Copy(&buf, r)
 
 	return buf.String()
-}
-
-func checkResultFunc(t *testing.T, root *TreeNode, data string, expected string) {
-	output := captureStdout(func() {
-		piscine.BTreeApplyInorder(root, fmt.Print)
-	})
-	// fmt.Printf("[%s]\n", output)
-	if output != expected {
-		t.Errorf("got %s want %s", output, expected)
-	}
-	if piscine.BTreeSearchItem(root, data) != nil {
-		t.Errorf("not deleted")
-	}
-
-	if piscine.BTreeIsBinary(root) == false {
-		t.Errorf("tree is not binary")
-	}
 }
