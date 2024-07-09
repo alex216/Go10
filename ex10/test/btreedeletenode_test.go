@@ -11,73 +11,61 @@ import (
 
 type TreeNode = piscine.TreeNode
 
-//	4
-//	2 6
-// 1 3 5 7
+func TestBTreeDelete(t *testing.T) {
+	tests := []struct {
+		name            string   // test name
+		input           []string // test case(btree)
+		input_to_delete string   // test case(delete node)
+		want            string   // expected result
+	}{
+		//	4
+		//	2 6
+		// 1 3 5 7
+		{"葉なし", []string{"4", "2", "6", "1", "3", "5", "7"}, "1", "234567"},
+		//	5
+		//	3 o
+		// 1 o
+		{"左葉あり", []string{"5", "3", "1"}, "3", "15"},
+		//	5
+		//	3 o
+		// o 4
+		{"右葉あり", []string{"5", "3", "4"}, "3", "45"},
+		//	5
+		//	3 o
+		// 1 4
+		{"両葉あり", []string{"5", "3", "1", "4"}, "3", "145"},
+		// 1
+		{"葉なし、かつroot", []string{"1"}, "1", ""},
+		//	5
+		//	3 o
+		// 1 o
+		{"左葉あり、かつroot", []string{"5", "3", "1"}, "5", "13"},
+		//	5
+		//	o 7
+		// o 6
+		{"右葉あり、かつroot", []string{"5", "6", "7"}, "5", "67"},
+		//	3
+		// 1 4
+		{"両葉あり、かつroot", []string{"3", "1", "4"}, "3", "14"},
+	}
 
-func TestNoChildren(t *testing.T) {
-	abstructTest(t, []string{"4", "2", "6", "1", "3", "5", "7"}, "1", "234567")
-}
-
-//	5
-//	3 o
-// 1 o
-
-func TestLeftChildren(t *testing.T) {
-	abstructTest(t, []string{"5", "3", "1"}, "3", "15")
-}
-
-//	5
-//	3 o
-// o 4
-
-func TestRightChildren(t *testing.T) {
-	abstructTest(t, []string{"5", "3", "4"}, "3", "45")
-}
-
-//	5
-//	3 o
-// 1 4
-
-func TestBothChildren(t *testing.T) {
-	abstructTest(t, []string{"5", "3", "1", "4"}, "3", "145")
-}
-
-// 1
-
-func TestNoChildrenButRoot(t *testing.T) {
-	abstructTest(t, []string{"1"}, "1", "")
-}
-
-//	5
-//	3 o
-// 1 o
-
-func TestLeftChildrenButRoot(t *testing.T) {
-	abstructTest(t, []string{"5", "3", "1"}, "5", "13")
-}
-
-//	5
-//	o 7
-// o 6
-
-func TestRightChildrenButRoot(t *testing.T) {
-	abstructTest(t, []string{"5", "6", "7"}, "5", "67")
-}
-
-//	3
-// 1 4
-
-func TestBothChildrenButRoot(t *testing.T) {
-	abstructTest(t, []string{"3", "1", "4"}, "3", "14")
+	// テストの実行
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := abstructTest(t, tc.input, tc.input_to_delete)
+			if got != tc.want {
+				t.Errorf("want[%q], got:[%q]", tc.want, got)
+			}
+		})
+	}
 }
 
 // //////////////////////////////////////// helper functions
-func abstructTest(t *testing.T, testarray []string, delete_target string, expected string) {
+func abstructTest(t *testing.T, testarray []string, delete_target string) string {
 	root := createBinaryTree(testarray)
 	delete_node := piscine.BTreeSearchItem(root, delete_target)
 	root = piscine.BTreeDeleteNode(root, delete_node)
-	checkResultFunc(t, root, delete_target, expected)
+	return checkResultFunc(t, root, delete_target)
 }
 
 func createBinaryTree(data []string) *TreeNode {
@@ -88,21 +76,17 @@ func createBinaryTree(data []string) *TreeNode {
 	return root
 }
 
-func checkResultFunc(t *testing.T, root *TreeNode, data string, expected string) {
+func checkResultFunc(t *testing.T, root *TreeNode, data string) string {
 	output := captureStdout(func() {
 		piscine.BTreeApplyInorder(root, fmt.Print)
 	})
-	// fmt.Printf("[%s]\n", output)
-	if output != expected {
-		t.Errorf("\n\ngot [%s] want [%s]\n\n", output, expected)
-	}
 	if piscine.BTreeSearchItem(root, data) != nil {
 		t.Errorf("not deleted")
 	}
-
 	if piscine.BTreeIsBinary(root) == false {
 		t.Errorf("tree is not binary")
 	}
+	return output
 }
 
 func captureStdout(f func()) string {
