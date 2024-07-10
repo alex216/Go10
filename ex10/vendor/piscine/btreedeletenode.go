@@ -19,6 +19,7 @@ func BTreeDeleteNode(root, node *TreeNode) *TreeNode {
 	}
 
 	if node == root {
+		replace.Parent = nil
 		return replace
 	}
 
