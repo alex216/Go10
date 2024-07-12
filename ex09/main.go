@@ -12,10 +12,10 @@ func main() {
 	piscine.BTreeInsertData(root, "5")
 	// root := &piscine.TreeNode{}
 
-	node := piscine.BTreeSearchItem(root, "1")
+	node := piscine.BTreeSearchItem(root, "4")
 	// node = nil
 
-	replacement := &piscine.TreeNode{Data: "3"}
+	replacement := &piscine.TreeNode{Data: "x"}
 	// replacement := &piscine.TreeNode{}
 
 	root = piscine.BTreeTransplant(root, node, replacement)
